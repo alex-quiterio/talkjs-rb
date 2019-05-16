@@ -4,7 +4,7 @@ module Talkjs
       class Participant < Talkjs::V1::Base
         RESOURCE_NAME = 'participants'.freeze
         # PUT /conversations/:conversation_id/participants/:user_id
-        # Creates a participant for a conversation_id with a :user_id
+        # Allows a user to join for a conversation_id with a :user_id
         # reference: https://talkjs.com/docs/Reference/REST_API/Reference/Participation.html#page_Join-conversation
         def self.create(conversation_id, user_id, payload)
           new(:put, "conversations/#{conversation_id}/#{RESOURCE_NAME}/#{user_id}", {}, payload).call

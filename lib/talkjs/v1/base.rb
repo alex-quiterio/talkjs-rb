@@ -8,9 +8,6 @@ module Talkjs
       end
       attr_reader :http_verb_method, :endpoint, :query, :body
 
-      MAX_TRIAL = 3
-      CALL_SLEEP = 3
-
       def initialize(http_verb_method, endpoint, query = {}, body = {})
         @http_verb_method = http_verb_method
         @endpoint = endpoint
@@ -19,71 +16,51 @@ module Talkjs
         @trial = 0
 
         @client = HTTPClient.new
+        @client.connect_timeout = Talkjs.configuration.connect_timeout
+        @client.send_timeout = Talkjs.configuration.send_timeout
+        @client.receive_timeout = Talkjs.configuration.receive_timeout
       end
 
       def call
-        header = {
-          'Authorization' => "Bearer #{Talkjs.api_secret_key}",
-          'Content-Type' => 'application/json'
-        }
-
         parameters = {
           :query => query,
           :body => body.to_json,
-          :header => header
+          :header => Talkjs.configuration.headers
         }
 
-
-        response = nil
-
-        loop do
+        begin
           response = @client.send(http_verb_method, url, parameters)
+          body = response.body ? JSON.parse(response.body) : ''
 
-          if response.body
-            begin
-              response = JSON.parse(response.body)
-              @trial = MAX_TRIAL + 1
-            rescue
-              @trial += 1
-
-              sleep CALL_SLEEP
-
-              response = {
-                  :meta => {
-                      :code => 500,
-                      :message => 'Something went wrong on Talkjs\'s end.',
-                      :type => 'InternalError'
-                  },
-                  :data => {
-                      :body => response.body,
-                      :cf_ray => cf_ray
-                  }
-              }
-            end
-          else
-            response = {
-                :meta => {
-                    :code => 500,
-                    :message => 'Something went wrong on Talkjs\'s end.',
-                    :type => 'InternalError'
-                },
-                :data => {
-                }
-            }
-          end
-
-          break if @trial > MAX_TRIAL
+          {
+            meta: { status: response.status },
+            data: { body: body }
+          }
+        rescue HTTPClient::ConnectTimeoutError
+          {
+            meta: { code: response.status }
+          }
+        rescue HTTPClient::SendTimeoutError
+          {
+            meta: { code: response.status }
+          }
+        rescue HTTPClient::ReceiveTimeoutError
+          {
+            meta: { code: response.status }
+          }
+        rescue JSON::ParserError
+          {
+            meta: { code: 500 },
+            data: { body: response.body }
+          }
         end
-
-        response
       end
 
       private
 
       def url
-        "#{Talkjs::URL}/v1/#{Talkjs.api_id}/#{endpoint}"
+        "#{Talkjs::URL}/v1/#{Talkjs.configuration.api_id}/#{endpoint}"
       end
-
     end
   end
 end

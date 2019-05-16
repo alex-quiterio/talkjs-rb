@@ -13,13 +13,13 @@ module Talkjs
         # PUT /conversations/:user_id
         # Updates a user with the new payload
         def self.create(conversation_id, payload)
-          new(:put, "conversations/#{conversation_id}/#{RESOURCE_NAME}", {}, payload).call
+          new(:post, "conversations/#{conversation_id}/#{RESOURCE_NAME}", {}, payload).call
         end
 
         # PUT /conversations/:user_id
         # Updates a user with the new payload
-        def self.update(user_id, payload)
-          new(:put, "#{RESOURCE_NAME}/#{user_id}", {}, payload).call
+        def self.update(conversation_id, message_id, payload)
+          new(:put, "conversations/#{conversation_id}/#{RESOURCE_NAME}/#{message_id}", {}, payload).call
         end
       end
     end

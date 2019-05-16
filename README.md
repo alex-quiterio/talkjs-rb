@@ -1,4 +1,4 @@
-## aftership-ruby
+## talkjs-rb
 
 Ruby Gem for TalkJS API.
 
@@ -29,8 +29,11 @@ This extension helps developers to integrate with TalkJS easily.
     Before using API, please include the gem in your script
 
 	```
-	Talkjs.api_id = 'YOUR_API_ID'
-    Talkjs.api_secret_key = 'YOUR_API_SECRET_KEY'
+	Talkjs.configure do |config|
+      config.api_id = 'YOUR_API_ID'
+      config.api_secret_key = 'YOUR_API_SECRET_KEY'
+    end
+
 	```
 
 2. Coding
