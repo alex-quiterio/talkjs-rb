@@ -20,7 +20,7 @@ This extension helps developers to integrate with TalkJS easily.
 
 ## Configuration
 
-1. Setup the API ID
+1. Setup the APP ID
 2. Setup the API Secret key
 
 ## Usage
@@ -30,7 +30,7 @@ This extension helps developers to integrate with TalkJS easily.
 
 	```
 	Talkjs.configure do |config|
-      config.api_id = 'YOUR_API_ID'
+      config.app_id = 'YOUR_APP_ID'
       config.api_secret_key = 'YOUR_API_SECRET_KEY'
     end
 

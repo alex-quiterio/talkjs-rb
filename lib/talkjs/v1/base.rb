@@ -59,7 +59,7 @@ module Talkjs
       private
 
       def url
-        "#{Talkjs::URL}/v1/#{Talkjs.configuration.api_id}/#{endpoint}"
+        "#{Talkjs::URL}/v1/#{Talkjs.configuration.app_id}/#{endpoint}"
       end
     end
   end
