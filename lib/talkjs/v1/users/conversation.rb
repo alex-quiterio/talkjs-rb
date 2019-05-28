@@ -5,7 +5,7 @@ module Talkjs
         # GET /users/:user_id/conversations
         # Return a list of conversations for a user
         def self.all(user_id, params = {})
-          new(:get, "#{RESOURCE_NAME}/#{user_id}/conversations", params).call
+          new(:get, "users/#{user_id}/conversations", params).call
         end
       end
     end
