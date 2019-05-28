@@ -1,7 +1,7 @@
 module Talkjs
   module V1
     class Configuration
-      attr_accessor :api_endpoint, :api_id, :api_secret_key
+      attr_accessor :api_endpoint, :app_id, :api_secret_key
       attr_writer :connect_timeout, :send_timeout, :receive_timeout
 
       def initialize
